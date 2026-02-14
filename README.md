@@ -15,7 +15,7 @@ The project demonstrates a complete end-to-end machine learning pipeline:
 ## 2. Dataset Description
 - **Dataset Name:** Bank Marketing Dataset
 - **Source:** UCI Machine Learning Repository
-- **Problem Type:** Binary Classification
+- **Problem Type:** Binary Classification(0/1)
 - **Number of Instances:** 45211
 - **Number of Features:** 16 input features
 - **Target Variable:**  
