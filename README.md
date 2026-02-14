@@ -48,27 +48,27 @@ The following evaluation metrics were used:
 
 ### Model Comparison Table
 
-| Model | Accuracy | AUC | Precision | Recall | F1 | MCC |
+| ML Model Name | Accuracy | AUC | Precision | Recall | F1 | MCC |
 |------|---------|-----|----------|--------|----|-----|
 | Logistic Regression | 0.9015 | 0.9060 | 0.6441 | 0.3533 | 0.4563 | 0.4295 |
 | Decision Tree | 0.8759|0.6958	|0.4688	|0.4607|	0.4647	|0.3945 |
-| KNN | 0.8938|	0.8099|	0.5845	|0.3192	|0.4129|	0.3800
+| kNN | 0.8938|	0.8099|	0.5845	|0.3192	|0.4129|	0.3800
 | Naive Bayes | 0.8638	|0.8227|	0.4309|	0.5144	|0.4690|	0.3935
-| Random Forest | 0.9058	|0.9264	|0.6671	|0.3880	|0.4907|	0.4625
-| XGBoost | 0.9081	|0.9314|	0.6557	|0.4508|	0.5343|	0.4957
+| Random Forest(Ensemble) | 0.9058	|0.9264	|0.6671	|0.3880	|0.4907|	0.4625
+| XGBoost(Ensemble) | 0.9081	|0.9314|	0.6557	|0.4508|	0.5343|	0.4957
 
 ---
 
 ## 4. Model Observations
 
-| Model | Observation |
+| ML Model Name| Observation about model performance |
 |------|------------|
 | Logistic Regression | Provides stable baseline performance with good AUC but relatively low recall. |
 | Decision Tree | Moderate performance with lower AUC; slightly prone to overfitting. |
 | KNN | Sensitive to feature scaling; lower recall compared to other models. |
 | Naive Bayes |Achieves higher recall among simple models but lower precision.|
-| Random Forest |Strong overall performance with good generalization and balanced metrics. |
-| XGBoost | Best overall model with highest Accuracy, AUC, F1 Score, and MCC. |
+| Random Forest(Ensemble) |Strong overall performance with good generalization and balanced metrics. |
+| XGBoost (Ensemble)| Best overall model with highest Accuracy, AUC, F1 Score, and MCC. |
 
 ---
 
