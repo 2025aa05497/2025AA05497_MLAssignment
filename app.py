@@ -2,12 +2,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
+import joblib
 
 from sklearn.metrics import (
     accuracy_score,
@@ -29,41 +24,25 @@ st.title("📊 ML Assignment 2 – Classification")
 st.write("Bank Marketing Dataset – Multiple ML Models Comparison")
 
 # --------------------------------------------------
-# Load Training Data (Cached)
+# Load Saved Models (NO TRAINING HERE)
 # --------------------------------------------------
 @st.cache_resource
-def load_data():
-    data = pd.read_csv("bank-full.csv", sep=";")
-    data["target"] = data["y"].map({"yes": 1, "no": 0})
-    data.drop("y", axis=1, inplace=True)
-
-    encoded = pd.get_dummies(data, drop_first=True)
-    X = encoded.drop("target", axis=1)
-    y = encoded["target"]
-
-    return X, y
-
-X_train, y_train = load_data()
-
-# --------------------------------------------------
-# Train ALL Models Once (Instant Switching)
-# --------------------------------------------------
-@st.cache_resource
-def train_all_models():
+def load_models():
     models = {
-        "Logistic Regression": LogisticRegression(max_iter=1000),
-        "Decision Tree": DecisionTreeClassifier(),
-        "Random Forest": RandomForestClassifier(n_estimators=50),
-        "KNN": KNeighborsClassifier(),
-        "Naive Bayes": GaussianNB()
+        "Logistic Regression": joblib.load("models/saved_models/logistic_regression.pkl"),
+        "Decision Tree Classifier": joblib.load("models/saved_models/decision_tree_classifier.pkl"),
+        "K-Nearest Neighbor Classifier": joblib.load("models/saved_models/knearest_neighbor_classifier.pkl"),
+        "Naive Bayes Classifier": joblib.load("models/saved_models/naive_bayes_classifier.pkl"),
+        "Ensemble Model - Random Forest": joblib.load("models/saved_models/ensemble_model__random_forest.pkl"),
+        "Ensemble Model - XGBoost": joblib.load("models/saved_models/ensemble_model__xgboost.pkl"),
     }
 
-    for model in models.values():
-        model.fit(X_train, y_train)
+    scaler = joblib.load("models/saved_models/scaler.pkl")
 
-    return models
+    return models, scaler
 
-models = train_all_models()
+
+models, scaler = load_models()
 
 # --------------------------------------------------
 # Sidebar Controls
@@ -112,17 +91,12 @@ if uploaded_file is not None:
     else:
         test_features = test_data.copy()
 
-    # Encode test data
-    test_encoded = pd.get_dummies(test_features, drop_first=True)
-
-    # Align columns
-    test_encoded = test_encoded.reindex(
-        columns=X_train.columns,
-        fill_value=0
-    )
+    # Scale ONLY for Logistic & KNN
+    if model_name in ["Logistic Regression", "K-Nearest Neighbor Classifier"]:
+        test_features = scaler.transform(test_features)
 
     # Predict
-    y_pred = model.predict(test_encoded)
+    y_pred = model.predict(test_features)
 
     st.success("Predictions generated successfully!")
 
@@ -132,7 +106,7 @@ if uploaded_file is not None:
     if y_true is not None:
 
         if hasattr(model, "predict_proba"):
-            y_prob = model.predict_proba(test_encoded)[:, 1]
+            y_prob = model.predict_proba(test_features)[:, 1]
             auc = roc_auc_score(y_true, y_prob)
         else:
             auc = 0
